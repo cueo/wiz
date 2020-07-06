@@ -6,7 +6,7 @@ SET_PILOT = "setPilot"
 PORT = 38899
 
 # Light keys
-HEXCODE = 'hexcode'
+HEXCODE = 'hex'
 COLOUR = 'colour'
 RED = 'red'
 GREEN = 'green'
