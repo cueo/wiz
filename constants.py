@@ -7,7 +7,7 @@ PORT = 38899
 
 # Light keys
 HEXCODE = 'hex'
-COLOUR = 'colour'
+COLOR = 'color'
 RED = 'red'
 GREEN = 'green'
 BLUE = 'blue'

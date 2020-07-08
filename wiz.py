@@ -31,8 +31,8 @@ class Light:
             params['r'] = int(kwargs[HEXCODE][:2], 16)
             params['g'] = int(kwargs[HEXCODE][2:4], 16)
             params['b'] = int(kwargs[HEXCODE][4:], 16)
-        elif COLOUR in kwargs:
-            params['r'], params['g'], params['b'] = webcolors.name_to_rgb(kwargs[COLOUR])
+        elif COLOR in kwargs:
+            params['r'], params['g'], params['b'] = webcolors.name_to_rgb(kwargs[COLOR])
         else:
             if RED in kwargs:
                 params['r'] = kwargs[RED]
