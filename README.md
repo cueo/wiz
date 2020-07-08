@@ -1,4 +1,4 @@
-# wiz
+# 💡 wiz
 Control Philips Wiz Smart LED from your terminal!
 
 ## How to use?
