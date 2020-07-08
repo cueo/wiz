@@ -44,7 +44,7 @@ class Light:
         print(params, message)
         self.send(message)
 
-    def dim(self, value: int):
+    def brightness(self, value: int):
         params = Params(dimming=value)
         message = self.message(params)
         self.send(message)
