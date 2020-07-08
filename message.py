@@ -26,10 +26,6 @@ class Request:
         return json.dumps(self.__dict__)
 
 
-class Response:
-    pass
-
-
 if __name__ == '__main__':
     message = Request(GET_PILOT, Params(state=True))
     print(bytes(message).decode('utf-8'))
