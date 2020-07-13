@@ -1,8 +1,10 @@
+import json
+
 import webcolors
 
-from udp import UDP
 from constants import *
-from message import Params, Request
+from message import Config, Params, Request
+from udp import UDP
 
 
 class Light:
@@ -10,9 +12,13 @@ class Light:
         # TODO: get ip from network auto
         self.ip = ip
         self.udp = UDP(ip)
+        self.config = self.get_config()
 
     def send(self, message):
-        self.udp.call(message)
+        result = self.udp.call(message)
+        if message.params:
+            self.update_config(message.params)
+        return result
 
     def on(self):
         params = Params(state=True)
@@ -22,8 +28,13 @@ class Light:
     def off(self):
         params = Params(state=False)
         message = self.message(params)
-        # print(message)
         self.send(message)
+
+    def switch(self):
+        if self.config.state:
+            self.off()
+        else:
+            self.on()
 
     def color(self, **kwargs):
         params = Params()
@@ -31,8 +42,8 @@ class Light:
             params['r'] = int(kwargs[HEXCODE][:2], 16)
             params['g'] = int(kwargs[HEXCODE][2:4], 16)
             params['b'] = int(kwargs[HEXCODE][4:], 16)
-        elif COLOUR in kwargs:
-            params['r'], params['g'], params['b'] = webcolors.name_to_rgb(kwargs[COLOUR])
+        elif COLOR in kwargs:
+            params['r'], params['g'], params['b'] = webcolors.name_to_rgb(kwargs[COLOR])
         else:
             if RED in kwargs:
                 params['r'] = kwargs[RED]
@@ -41,10 +52,9 @@ class Light:
             if GREEN in kwargs:
                 params['g'] = kwargs[GREEN]
         message = self.message(params)
-        print(params, message)
         self.send(message)
 
-    def dim(self, value: int):
+    def brightness(self, value: int):
         params = Params(dimming=value)
         message = self.message(params)
         self.send(message)
@@ -61,7 +71,27 @@ class Light:
 
     def get_config(self):
         message = Request(GET_PILOT)
-        return self.udp.call(message)
+        result_json = self.send(message).decode('UTF-8')
+        result = json.loads(result_json)['result']
+        config = Config(state=result['state'], scene=result['sceneId'], brightness=result['dimming'])
+        if 'r' in result:
+            config.red = result['r']
+            config.green = result['g']
+            config.blue = result['b']
+        return config
+
+    def update_config(self, params):
+        for key, value in params.items():
+            if key == 'r':
+                self.config.red = params['r']
+            elif key == 'g':
+                self.config.green = params['g']
+            elif key == 'b':
+                self.config.blue = params['b']
+            elif key == 'dimming':
+                self.config.brightness = params['dimming']
+            elif key == 'state':
+                self.config.state = params['state']
 
     @staticmethod
     def message(params: Params):
@@ -71,3 +101,4 @@ class Light:
 if __name__ == '__main__':
     light = Light(IP)
     light.color(red=255)
+    light.switch()

@@ -7,9 +7,10 @@ PORT = 38899
 
 # Light keys
 HEXCODE = 'hex'
-COLOUR = 'colour'
+COLOR = 'color'
 RED = 'red'
 GREEN = 'green'
 BLUE = 'blue'
 
+NETWORK_NAME = 'wiz_a4f78f'
 IP = '192.168.31.170'

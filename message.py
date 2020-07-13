@@ -6,6 +6,9 @@ class Params:
     def __init__(self, **kwargs):
         self.params = kwargs
 
+    def __getitem__(self, key):
+        return self.params[key]
+
     def __setitem__(self, key, value):
         self.params[key] = value
 
@@ -16,6 +19,7 @@ class Params:
 class Request:
     def __init__(self, method: str, params: Params = None):
         self.method = method
+        self.params = None
         if params:
             self.params = params.params
 
@@ -26,8 +30,14 @@ class Request:
         return json.dumps(self.__dict__)
 
 
-class Response:
-    pass
+class Config:
+    def __init__(self, state=True, scene=11, red=None, green=None, blue=None, brightness=100):
+        self.state = state
+        self.scene = scene
+        self.red = red
+        self.green = green
+        self.blue = blue
+        self.brightness = brightness
 
 
 if __name__ == '__main__':
