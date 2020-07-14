@@ -4,6 +4,7 @@ import webcolors
 
 from constants import *
 from message import Config, Params, Request
+from scenes import SCENES
 from udp import UDP
 
 
@@ -69,6 +70,16 @@ class Light:
         message = self.message(params)
         self.send(message)
 
+    def scene(self, scene_id=None, scene=None):
+        if scene:
+            if scene in SCENES:
+                scene_id = SCENES[scene]
+        if not scene_id:
+            scene_id = input(self.get_prompt())
+        params = Params(sceneId=scene_id)
+        message = self.message(params)
+        self.send(message)
+
     def get_config(self):
         message = Request(GET_PILOT)
         result_json = self.send(message).decode('UTF-8')
@@ -82,6 +93,8 @@ class Light:
 
     def update_config(self, params):
         for key, value in params.items():
+            if key == 'sceneId':
+                self.config.scene = params['sceneId']
             if key == 'r':
                 self.config.red = params['r']
             elif key == 'g':
@@ -97,8 +110,16 @@ class Light:
     def message(params: Params):
         return Request(SET_PILOT, params)
 
+    @staticmethod
+    def get_prompt():
+        prompt = 'Select one of the following scenes:\n'
+        for scene, scene_id in SCENES.items():
+            prompt += '{:>3} : {}\n'.format(scene_id, scene)
+        return prompt
+
 
 if __name__ == '__main__':
     light = Light(IP)
+    light.scene()
     light.color(red=255)
     light.switch()
