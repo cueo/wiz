@@ -20,4 +20,7 @@ light.brightness(50)  # set brightness to 50%
 light.color(color='red')  # set colour to red using string
 light.color(red=0, blue=255, green=0)  # set colour to blue using RGB values
 light.color(hex='00ff00')  # set colour to green using hexcode
+
+light.scene('Forest')  # change color scene to Forest
+light.scene()  # select from a range of predefined scenes
 ```
